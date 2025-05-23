@@ -1,6 +1,6 @@
 # Sabdarth - Word Meaning Finder Chrome Extension
 
-A Chrome extension that helps you to find meanings of English words using the Gemini AI API. The extension provides a clean and intuitive interface to look up word meanings, Hindi translations, synonyms, and usage examples.
+Vibe coded a Chrome extension that helps you to find meanings of English words using the Gemini AI API. The extension provides a clean and intuitive interface to look up word meanings, Hindi translations, synonyms, and usage examples.
 
 ## Features
 
@@ -53,7 +53,7 @@ sabdarth/
 6. Load the extension in Chrome:
    - Open Chrome and go to chrome://extensions/
    - Enable "Developer mode" in the top right
-   - Click "Load unpacked" and select the extension directory
+   - Click "Load unpacked" and select the extension directory /sabdarth
 
 ## Usage
 
