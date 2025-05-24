@@ -1,8 +1,7 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
 const bodyParser = require("body-parser");
-
 
 dotenv.config();
 
@@ -10,11 +9,10 @@ const app = express();
 
 // Simple logging middleware
 app.use((req, res, next) => {
-    const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${req.method} ${req.url}`);
-    next();
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.url}`);
+  next();
 });
-
 
 // Get allowed origins from environment variable
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -23,30 +21,29 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 // CORS configuration
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
 });
 
 // Apply CORS middleware
 app.use(bodyParser.json());
 
-
 const GEMINI_KEY = process.env.GEMINI_KEY;
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_KEY}`;
 
 app.get("/", (req, res) => {
-    console.log('Root endpoint accessed');
-    res.send("Hello from the server!");
+  console.log("Root endpoint accessed");
+  res.send("Hello from the server!");
 });
 
-app.post('/meaning', async (req, res) => {
-    const word = req.body.word;
+app.post("/meaning", async (req, res) => {
+  const word = req.body.word;
 
   if (!word) {
     return res.status(400).json({ error: "Missing word in request body" });
@@ -56,12 +53,13 @@ app.post('/meaning', async (req, res) => {
 
   const prompt = `${word}
 
-As a translator, please translate this word and find its meaning, Hindi meaning, 3 synonyms words, 3 usage examples and respond in the following **strict format** using a valid JSON object inside a \`\`\`json code block:
+As a translator, please translate this word and find its meaning, pronunciation in American English, Hindi meaning, 3 synonyms words, 3 usage examples and respond in the following **strict format** using a valid JSON object inside a \`\`\`json code block:
 
 \`\`\`json
 {
   "word": "acrimony",
   "meaning": "angry and bitter feelings or words",
+  "pronunciation": "a·kruh·mow·nee",
   "Hindi_meaning": "क्रोधयुक्त और कटु भावनाएँ या शब्‍द",
   "synonyms": ["bitterness", "rancour", "resentment"],
   "usage_examples": ["He had a bitter acrimony with his ex-wife.", "The acrimony between the two countries lasted for years.", "The dispute was settled without acrimony."]
@@ -85,7 +83,11 @@ Do not include any explanation outside of the code block. Just return this exact
   try {
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json", "Access-Control-Allow-Origin": "*" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
       body,
     });
 
@@ -100,11 +102,19 @@ Do not include any explanation outside of the code block. Just return this exact
         const parsedJson = JSON.parse(jsonBlockMatch[1]);
         const word = parsedJson.word || "";
         const meaning = parsedJson.meaning || "";
+        const pronunciation = parsedJson.pronunciation || "";
         const hindiMeaning = parsedJson.Hindi_meaning || "";
         const synonyms = parsedJson.synonyms || [];
         const usageExamples = parsedJson.usage_examples || [];
 
-        return res.json({ "word": word, "meaning": meaning, "hindiMeaning": hindiMeaning, "synonyms": synonyms, "usage_examples": usageExamples });
+        return res.json({
+          word: word,
+          meaning: meaning,
+          pronunciation: pronunciation,
+          hindiMeaning: hindiMeaning,
+          synonyms: synonyms,
+          usage_examples: usageExamples,
+        });
       } else {
         return res.status(500).json({
           error: "Failed to find or parse JSON block in Gemini response.",
@@ -121,5 +131,5 @@ Do not include any explanation outside of the code block. Just return this exact
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
