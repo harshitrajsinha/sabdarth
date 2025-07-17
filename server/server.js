@@ -53,12 +53,13 @@ app.post("/meaning", async (req, res) => {
 
   const prompt = `${word}
 
-As a translator, please translate this word and find its meaning, pronunciation in American English, Hindi meaning, 3 synonyms words, 3 usage examples and respond in the following **strict format** using a valid JSON object inside a \`\`\`json code block:
+As a translator, translate this word and find its meaning, part of speech, pronunciation in American English, Hindi meaning, 3 synonyms words, 3 usage examples and respond in the following **strict format** using a valid JSON object inside a \`\`\`json code block:
 
 \`\`\`json
 {
   "word": "acrimony",
   "meaning": "angry and bitter feelings or words",
+  "part_of_speech": "noun",
   "pronunciation": "a·kruh·mow·nee",
   "Hindi_meaning": "क्रोधयुक्त और कटु भावनाएँ या शब्‍द",
   "synonyms": ["bitterness", "rancour", "resentment"],
@@ -93,7 +94,6 @@ Do not include any explanation outside of the code block. Just return this exact
 
     const data = await response.json();
     const candidates = data?.candidates;
-
     if (candidates && candidates.length > 0) {
       const rawText = candidates[0].content?.parts?.[0]?.text;
       const jsonBlockMatch = rawText?.match(/```json\s*([\s\S]*?)\s*```/);
@@ -102,6 +102,7 @@ Do not include any explanation outside of the code block. Just return this exact
         const parsedJson = JSON.parse(jsonBlockMatch[1]);
         const word = parsedJson.word || "";
         const meaning = parsedJson.meaning || "";
+        const partOfSpeech = parsedJson.part_of_speech || "";
         const pronunciation = parsedJson.pronunciation || "";
         const hindiMeaning = parsedJson.Hindi_meaning || "";
         const synonyms = parsedJson.synonyms || [];
@@ -110,6 +111,7 @@ Do not include any explanation outside of the code block. Just return this exact
         return res.json({
           word: word,
           meaning: meaning,
+          partOfSpeech: partOfSpeech,
           pronunciation: pronunciation,
           hindiMeaning: hindiMeaning,
           synonyms: synonyms,
