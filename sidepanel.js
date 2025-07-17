@@ -52,6 +52,10 @@ function displayResult(data) {
             <p>${data.meaning || "Meaning not found"}</p>
         </div>
         <div class="word-info">
+            <h3>Part of Speech</h3>
+            <p>${data.partOfSpeech || "Part of Speech not found"}</p>
+        </div>
+        <div class="word-info">
             <h3>Pronunciation</h3>
             <p>${data.pronunciation || "Pronunciation not found"}</p>
         </div>
