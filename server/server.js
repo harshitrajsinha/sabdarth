@@ -92,7 +92,6 @@ Do not include any explanation outside of the code block. Just return this exact
       body,
     });
     const data = await response.json();
-    console.log(data);
     if (response.status === 429) {
       return res.status(429).json({
         error:
