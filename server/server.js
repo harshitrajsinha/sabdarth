@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 const GEMINI_KEY = process.env.GEMINI_KEY;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_KEY}`;
 
 app.get("/", (req, res) => {
   console.log("Root endpoint accessed");
@@ -91,8 +91,14 @@ Do not include any explanation outside of the code block. Just return this exact
       },
       body,
     });
-
     const data = await response.json();
+    console.log(data);
+    if (response.status === 429) {
+      return res.status(429).json({
+        error:
+          "Rate limit exceeded. Please wait a moment before searching again.",
+      });
+    }
     const candidates = data?.candidates;
     if (candidates && candidates.length > 0) {
       const rawText = candidates[0].content?.parts?.[0]?.text;
