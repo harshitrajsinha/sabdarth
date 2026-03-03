@@ -1,4 +1,8 @@
-document.getElementById("submitButton").addEventListener("click", async () => {
+// handle form submission to avoid page reload which was causing the fetch to fail
+const form = document.getElementById("wordForm");
+form.addEventListener("submit", async (e) => {
+  e.preventDefault(); // stop browser from reloading/redirecting
+
   const word = document.getElementById("wordInput").value.trim();
   if (!word) {
     alert("Please enter a word");

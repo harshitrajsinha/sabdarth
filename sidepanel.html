@@ -19,6 +19,11 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
+            width: 100%;
+            /* take full available width */
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+            /* gap to button */
         }
 
         #submitButton {
@@ -31,6 +36,8 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            margin-bottom: 1rem;
+            /* gap to result div */
         }
 
         #submitButton:hover {
@@ -106,9 +113,11 @@
 
 <body>
     <h1>Sabdarth</h1>
-    <input type="text" id="wordInput" placeholder="Enter a word...">
-    <button id="submitButton">Find Meaning</button>
-    <div id="result"></div>
+    <form id="wordForm">
+        <input type="text" id="wordInput" name="word" placeholder="Enter a word...">
+        <button id="submitButton" type="submit">Find Meaning</button>
+        <div id="result"></div>
+    </form>
     <script src="sidepanel.js"></script>
 </body>
 
